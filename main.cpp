@@ -1,7 +1,13 @@
 #include "Review.h"
 #include "FileIO.h"
+#include "Ordenacao.h"
+#include <fstream>
+#include <iomanip>
+#include <chrono>
+#include <cstdlib>
 
 using namespace std;
+using namespace std::chrono;
 
 void imprimeMenu(){
     cout<<endl<<" ____________________________MENU____________________________"<<endl;
@@ -13,16 +19,54 @@ void imprimeMenu(){
 
 int main(int argc, char const *argv[])
 {
-    int opM;
+    int opM, comparacao, movimentacao, m = 5;
+    long int n[5] = {10000, 50000, 100000, 500000, 1000000};
+    double mediaComparacao = 0, mediaMovimentacao = 0, mediaTempo = 0, tempo;
 
     if(argc != 2){
         cout << "Erro: Diretorio nao especificado" << endl;
         return 0;
     }
 
-    leituraCsv(argv[1]);
+    ofstream arq("Saida.txt");
+    arq << "Resultados do QuickSort" << endl;
 
-    imprimeMenu();
+    for(int i = 0; i < 5; i++){
+        arq << "\nTamanho do conjunto: " << n[i] << endl;
+        arq << setw(12) << "Execucao" << " | " << setw(12) << "Comparacoes" << " | ";
+        arq << setw(12) << "Movimentacoes" << " | " << setw(12) << "Tempo "  << endl;
+        arq << "-------------------------------------------------------------------------------" << endl;
+        for(int j = 0; j < m; j++){
+            Review **vet = new Review*[n[i]];
+            comparacao = 0;
+            movimentacao = 0;
+
+            importaConjunto(n[i], vet);
+
+            high_resolution_clock::time_point inicio = high_resolution_clock::now();
+            quickSort(vet, 0, n[i] - 1, comparacao, movimentacao);
+            high_resolution_clock::time_point fim = high_resolution_clock::now();
+            tempo = duration_cast<duration<double>>(fim - inicio).count();
+
+            mediaComparacao += comparacao;
+            mediaMovimentacao += movimentacao;
+            mediaTempo += tempo;
+            arq << setw(6) << j+1 << setw(20) << comparacao << setw(12) << movimentacao << setw(20) << tempo << endl;
+            delete[] vet;
+        }
+        mediaComparacao /= 5;
+        mediaMovimentacao /= 5;
+        mediaTempo /= 5;
+
+        arq << "-------------------------------------------------------------------------------" << endl;
+        arq << setw(6) << "Media" << setw(20) << mediaComparacao << setw(12) << mediaMovimentacao << setw(20) << mediaTempo << endl;
+    }
+
+    arq.close();
+
+    //leituraCsv(argv[1]);
+
+    /*imprimeMenu();
 
     cin >> opM;
 
@@ -42,6 +86,6 @@ int main(int argc, char const *argv[])
         }
         imprimeMenu();
         cin >> opM;
-    }
+    }*/
     return 0;
 }

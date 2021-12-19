@@ -14,4 +14,8 @@ void testeImportacao();
 
 void leituraCsv(string diretorio);
 
+void importaConjunto(int n, Review *vet[]);
+
+void imprimeConjunto (int n, Review *vet[]);
+
 #endif // FILEIO_H_INCLUDED
