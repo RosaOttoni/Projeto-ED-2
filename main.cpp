@@ -60,8 +60,40 @@ int main(int argc, char const *argv[])
 
         arq << "-------------------------------------------------------------------------------" << endl;
         arq << setw(6) << "Media" << setw(20) << mediaComparacao << setw(12) << mediaMovimentacao << setw(20) << mediaTempo << endl;
+    
     }
+    mediaComparacao = 0, mediaMovimentacao = 0, mediaTempo = 0, tempo =0;
+    arq << "Resultados do TimSort" << endl;
+    for(int i = 0; i < 5; i++){
+        arq << "\nTamanho do conjunto: " << n[i] << endl;
+        arq << setw(12) << "Execucao" << " | " << setw(12) << "Comparacoes" << " | ";
+        arq << setw(12) << "Movimentacoes" << " | " << setw(12) << "Tempo "  << endl;
+        arq << "-------------------------------------------------------------------------------" << endl;
+        for(int j = 0; j < m; j++){
+            Review **vet2 = new Review*[n[i]];
+            comparacao = 0;
+            movimentacao = 0;
 
+            importaConjunto(n[i], vet2);
+           
+            high_resolution_clock::time_point inicio = high_resolution_clock::now();
+            timSort(vet2, n[i] - 1, comparacao, movimentacao );
+            high_resolution_clock::time_point fim = high_resolution_clock::now();
+            tempo = duration_cast<duration<double>>(fim - inicio).count();
+
+            mediaComparacao += comparacao;
+            mediaMovimentacao += movimentacao;
+            mediaTempo += tempo;
+            arq << setw(6) << j+1 << setw(20) << comparacao << setw(12) << movimentacao << setw(20) << tempo << endl;
+            delete[] vet2;
+        }
+        mediaComparacao /= 5;
+        mediaMovimentacao /= 5;
+        mediaTempo /= 5;
+
+        arq << "-------------------------------------------------------------------------------" << endl;
+        arq << setw(6) << "Media" << setw(20) << mediaComparacao << setw(12) << mediaMovimentacao << setw(20) << mediaTempo << endl;
+    }
     arq.close();
 
     //leituraCsv(argv[1]);
