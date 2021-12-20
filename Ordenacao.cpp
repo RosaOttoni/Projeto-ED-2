@@ -171,5 +171,44 @@ void timSort(Review *vetor[], int n, int &comparacao, int &movimentacao)
         }
     }
 }
-    
+
+void heapify(Review *vetor[], int i, int n, int &comparacao, int &movimentacao)
+{
+    while(i < n)
+    {
+        int filho = 2*i + 1;
+        if(filho < n)
+        {
+            comparacao++;
+            if(filho+1 < n && vetor[filho+1]->getUpvotes() > vetor[filho]->getUpvotes())
+                filho++;
+            
+            if(vetor[filho]->getUpvotes() > vetor[i]->getUpvotes()){
+                troca(vetor, i, filho);
+                movimentacao++;
+            }
+        }
+        i = filho;
+    }
+
+}   
+
+void constroiHeap(Review *vetor[], int n, int &comparacao, int &movimentacao)
+{
+    for(int i = n/2-1; i >= 0; i--)
+        heapify(vetor, i, n, comparacao, movimentacao);
+}
+
+void heapSort(Review *vetor[], int n, int &comparacao, int &movimentacao)
+{
+    constroiHeap(vetor, n, comparacao, movimentacao);
+    while(n > 0)
+    {
+        troca(vetor, 0, n-1);
+        movimentacao++;
+        heapify(vetor, 0, n-1, comparacao, movimentacao);
+        n--;
+    }
+}
+
 

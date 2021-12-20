@@ -15,4 +15,11 @@ void mergeSort(Review *vetor[], int inicio, int fim,  int &comparacao, int &movi
 
 void intercala(Review vetor[],int inicio, int meio,int fim,  int &comparacao, int &movimentacao);
 
+void heapSort(Review *vetor[], int n, int &comparacao, int &movimentacao);
+
+void constroiHeap(Review *vetor[], int n, int &comparacao, int &movimentacao);
+
+void heapify(Review *vetor[], int i, int n, int &comparacao, int &movimentacao);
+
+
 #endif // ORDENACAO_H_INCLUDED

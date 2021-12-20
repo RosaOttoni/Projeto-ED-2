@@ -204,7 +204,7 @@ void imprimeConjunto (int n, Review *vet[]){
 
     for(int i = 0; i < n; i++){
         //cout << "Review ID: " << vet[i]->getReview_id() << endl;
-        //cout << "Review Text: " << vet[i]->getReview_text() << endl;
+        //<< "Review Text: " << vet[i]->getReview_text() << endl;
         cout << "Upvotes: " << vet[i]->getUpvotes() << endl;
         //cout << "App Version: " << vet[i]->getApp_version() << endl;
         cout << "Posted Date: " << vet[i]->getPosted_date() << endl<<endl;
