@@ -1,6 +1,7 @@
 #include "Review.h"
 #include "FileIO.h"
 #include "Ordenacao.h"
+#include "TabelaHash.h"
 #include <fstream>
 #include <iomanip>
 #include <chrono>
@@ -172,7 +173,27 @@ int main(int argc, char const *argv[])
         }
         break;
 
-        case 2:{}
+        case 2:{
+            int n;
+            cout << "Por favor, insira a quantidade de reviews a serem analisados." << endl;
+            cin >> n;
+            TabelaHash tab(n);
+            srand(time(NULL));
+            for (int i = 0; i < n; i++)
+            {
+              int randpos = rand() % 3660723;
+              Review *review = new Review();
+              ifstream infile("tiktok_app_reviews.bin", ios::binary);
+              infile.seekg(randpos * sizeof(Review));
+              infile.read((char *)review, sizeof(Review));
+              tab.insereChave(review->getApp_version());
+              infile.close();
+            }
+            tab.mostraTabela();
+            tab.qsort(tab.getTabela(),0,tab.getTamMax()-1);
+            tab.mostraTabela();
+            cin>>n;  
+        }
         break;
 
         case 3:{
@@ -216,6 +237,14 @@ int main(int argc, char const *argv[])
                 teste << "App Version: " << vet4[i]->getApp_version() << endl;
                 teste << "Posted Date: " << vet4[i]->getPosted_date() << endl<<endl;
             }
+            importaConjunto(100, vet4);
+            TabelaHash tab(100);
+            for(int i = 0; i < 99; i++){
+              tab.insereChave(vet4[i]->getApp_version());
+            }
+            tab.qsort(tab.getTabela(),0,tab.getTamMax()-1);              
+            teste << "Saida do Hash" << endl;           
+            teste << tab.strTabela(100);            
         }
             break;
     }
