@@ -33,7 +33,7 @@ public:
   void qsort(item *conj, int esq, int dir);
   void insereChave(char *str);
   void buscaChave(char *str);
-  void mostraTabela();
+  void mostraTabela(int n);
   string strTabela(int n);
 };
 

@@ -225,9 +225,9 @@ void TabelaHash::buscaChave(char *str)
   cout << str << " encontrado!" << endl;
 }
 
-void TabelaHash::mostraTabela()
+void TabelaHash::mostraTabela(int n)
 {
-  for (int i = 0; i < tam_max; i++)
+  for (int i = 0; i < n; i++)
   {
     if (tabela[i].chave[0] != '\0')
       cout << i << " ----> " << tabela[i].chave << " : " << tabela[i].valor << endl;

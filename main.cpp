@@ -190,8 +190,9 @@ int main(int argc, char const *argv[])
               infile.close();
             }
             tab.qsort(tab.getTabela(),0,tab.getTamMax()-1);
-            tab.mostraTabela();
-            cin>>n;  
+            cout << "Por favor, insira a quantidade de reviews a serem exibidos." << endl;
+            cin >> n;
+            tab.mostraTabela(n);  
         }
         break;
 
