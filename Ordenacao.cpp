@@ -70,7 +70,7 @@ void insertionSort(Review *vetor[], int inicio, int fim,  int &comparacao, int &
     {
         aux = vetor[i];
         int j=i-1;
-        //comparacao++;
+        movimentacao++;
         //deslocando os elementos anteriores a chave que sao maiores 
         while (j>0 && vetor[j]->getUpvotes() > aux->getUpvotes())
         {
@@ -80,6 +80,7 @@ void insertionSort(Review *vetor[], int inicio, int fim,  int &comparacao, int &
         }
         vetor[j+1] = aux;
         movimentacao++;
+        comparacao++;
     }
 }
 void intercala(Review *vetor[],int esq, int meio,int dir,  int &comparacao, int &movimentacao)
@@ -93,10 +94,13 @@ void intercala(Review *vetor[],int esq, int meio,int dir,  int &comparacao, int 
     for (i = 0; i < vet1; i++)
     {
         vetorEsq[i] = vetor[esq + i];
+        movimentacao++;
     }
     for (j = 0; j < vet2; j++)
     {
         vetorDir[j] = vetor[meio +1+j];
+        movimentacao++;
+        
     }
     i =0,j=0;
     int k = esq;            
@@ -118,23 +122,21 @@ void intercala(Review *vetor[],int esq, int meio,int dir,  int &comparacao, int 
 
         }
         k++;
-        //comparacao++;
+        comparacao++;
      }
     while (i<vet1)
     {
         vetor[k] = vetorEsq[i];
-        movimentacao++;
         i++;
         k++;
-        comparacao++;
+        movimentacao++;
     }
     while (j<vet2)
     {
         vetor[k] = vetorDir[j];
         j++; 
-        movimentacao++;
-        comparacao++;
         k++;
+        movimentacao++;
     }
             
 }
@@ -147,7 +149,7 @@ void mergeSort(Review *vetor[], int inicio, int fim, int &comparacao, int &movim
     {
         meio = (inicio + fim) / 2;
         //dividindo o vetor em espaços individuais.
-        mergeSort(vetor, inicio, meio, comparacao, movimentacao);//primiraa metade
+        mergeSort(vetor, inicio, meio, comparacao, movimentacao);//primeira metade
         mergeSort(vetor, meio + 1, fim, comparacao, movimentacao);//segunda metade
         intercala(vetor, inicio, meio, fim,comparacao, movimentacao );// une od dois sub arrays criados
     }
@@ -171,7 +173,6 @@ void timSort(Review *vetor[], int n, int &comparacao, int &movimentacao)
         }
     }
 }
-
 void heapify(Review *vetor[], int i, int n, int &comparacao, int &movimentacao)
 {
     while(i < n)
@@ -209,6 +210,6 @@ void heapSort(Review *vetor[], int n, int &comparacao, int &movimentacao)
         heapify(vetor, 0, n-1, comparacao, movimentacao);
         n--;
     }
-}
+}    
 
-
+ 
