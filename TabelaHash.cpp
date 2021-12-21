@@ -1,10 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
-#include <ctime>
 #include "TabelaHash.h"
-#include "FileIO.h"
-#include "Review.h"
 
 using namespace std;
 

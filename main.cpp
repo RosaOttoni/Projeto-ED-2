@@ -189,7 +189,6 @@ int main(int argc, char const *argv[])
               tab.insereChave(review->getApp_version());
               infile.close();
             }
-            tab.mostraTabela();
             tab.qsort(tab.getTabela(),0,tab.getTamMax()-1);
             tab.mostraTabela();
             cin>>n;  
