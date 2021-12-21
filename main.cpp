@@ -119,7 +119,8 @@ int main(int argc, char const *argv[])
                 importaConjunto(n[i], vet3);
             
                 high_resolution_clock::time_point inicio = high_resolution_clock::now();
-                heapSort(vet3, n[i] - 1, comparacao, movimentacao );
+                heapSort(vet3, n[i], comparacao, movimentacao );
+                imprimeConjunto(n[i], vet3);
                 high_resolution_clock::time_point fim = high_resolution_clock::now();
                 tempo = duration_cast<duration<double>>(fim - inicio).count();
 
