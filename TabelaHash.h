@@ -32,9 +32,8 @@ public:
   int getTamMax();
   void qsort(item *conj, int esq, int dir);
   void insereChave(char *str);
-  void buscaChave(char *str);
   void mostraTabela(int n);
-  string strTabela(int n);
+  string linhaTabela(int n);
 };
 
 #endif

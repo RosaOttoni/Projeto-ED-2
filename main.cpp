@@ -173,26 +173,27 @@ int main(int argc, char const *argv[])
         }
         break;
 
-        case 2:{
+        case 2:
+        {
             int n;
             cout << "Por favor, insira a quantidade de reviews a serem analisados." << endl;
             cin >> n;
-            TabelaHash tab(n);
+            TabelaHash tab;
             srand(time(NULL));
+            if (n > 10000)
+            {
+              cout << "[Obtendo reviews, por favor aguarde...]" << endl;
+            }
+            Review **veth = new Review*[n];
+            importaConjunto(n, veth);
             for (int i = 0; i < n; i++)
             {
-              int randpos = rand() % 3660723;
-              Review *review = new Review();
-              ifstream infile("tiktok_app_reviews.bin", ios::binary);
-              infile.seekg(randpos * sizeof(Review));
-              infile.read((char *)review, sizeof(Review));
-              tab.insereChave(review->getApp_version());
-              infile.close();
+              tab.insereChave(veth[i]->getApp_version());
             }
-            tab.qsort(tab.getTabela(),0,tab.getTamMax()-1);
+            tab.qsort(tab.getTabela(), 0, tab.getTamMax() - 1);
             cout << "Por favor, insira a quantidade de reviews a serem exibidos." << endl;
             cin >> n;
-            tab.mostraTabela(n);  
+            tab.mostraTabela(n);
         }
         break;
 
@@ -238,13 +239,17 @@ int main(int argc, char const *argv[])
                 teste << "Posted Date: " << vet4[i]->getPosted_date() << endl<<endl;
             }
             importaConjunto(100, vet4);
-            TabelaHash tab(100);
-            for(int i = 0; i < 99; i++){
+            TabelaHash tab;
+            for (int i = 0; i < 100; i++)
+            {
               tab.insereChave(vet4[i]->getApp_version());
             }
-            tab.qsort(tab.getTabela(),0,tab.getTamMax()-1);              
-            teste << "Saida do Hash" << endl;           
-            teste << tab.strTabela(100);            
+            tab.qsort(tab.getTabela(), 0, tab.getTamMax() - 1);
+            teste << "Saida do Hash" << endl;
+            for (int i = 0; i < 100; i++)
+            {
+              teste << tab.linhaTabela(i);
+            }            
         }
             break;
     }

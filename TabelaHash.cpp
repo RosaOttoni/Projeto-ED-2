@@ -3,26 +3,25 @@
 #include <cstring>
 #include "TabelaHash.h"
 
+#define PRIMOS                                                                                                                                                                                                                                           \
+  {                                                                                                                                                                                                                                                      \
+    2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257 \
+  }
+
 using namespace std;
 
-TabelaHash::TabelaHash(int n)
+TabelaHash::TabelaHash(int n) // construtor com param de tamanho
 {
   if (n < 10)
   {
     tam_max = 11;
     primo = 7;
   }
-  else if (n > 157)
-  {
-    tam_max = 157;
-    primo = 151;
-  }
   else
   {
     tam_max = primoMaior(n);
     primo = primoMenor(n);
   }
-
   tabela = new item[tam_max];
   qtd = 0;
   for (int i = 0; i < tam_max; i++)
@@ -32,7 +31,7 @@ TabelaHash::TabelaHash(int n)
   }
 }
 
-TabelaHash::TabelaHash()
+TabelaHash::TabelaHash() // construtor padrao
 {
   tam_max = 101;
   primo = 97;
@@ -45,49 +44,42 @@ TabelaHash::TabelaHash()
   }
 }
 
-TabelaHash::~TabelaHash() {}
+TabelaHash::~TabelaHash() {} // destrutor
 
 bool TabelaHash::checaPrimo(int n)
 {
-  if (n == 1)
+  int primos[] = PRIMOS; // é checado primalidade para valores até o ultimo primo ao quadrado
   {
-    return false;
-  }
-  for (int i = 2; i * i <= n; i++)
-  {
-    if (n % i == 0)
+    for (int i = 0; (i < (sizeof(primos) / sizeof(*primos)) && primos[i] < n); i++)
     {
-      return false;
+      if (n % primos[i] == 0)
+      {
+        return false;
+      }
     }
+    return true;
   }
-  return true;
 }
 
-int TabelaHash::primoMaior(int n)
+int TabelaHash::primoMaior(int n) // busca primo maior para definir tam_max
 {
-  for (int i = n + 1; i < 2 * n; i++)
+  if (checaPrimo(n + 1))
   {
-    if (checaPrimo(i))
-    {
-      return i;
-    }
+    return (n + 1);
   }
   return (primoMaior(n + 1));
 }
 
-int TabelaHash::primoMenor(int n)
+int TabelaHash::primoMenor(int n) // busca primo menor para definir primo do hash2
 {
-  for (int i = n - 1; i > 0; i--)
+  if (checaPrimo(n - 1))
   {
-    if (checaPrimo(i))
-    {
-      return i;
-    }
+    return (n - 1);
   }
   return (primoMenor(n - 1));
 }
 
-int TabelaHash::qpart(item *conj, int esq, int dir)
+int TabelaHash::qpart(item *conj, int esq, int dir) // particiona do quicksort
 {
   int i = (esq - 1);
   for (int j = esq; j < dir; j++)
@@ -106,7 +98,7 @@ int TabelaHash::qpart(item *conj, int esq, int dir)
   return (i + 1);
 }
 
-void TabelaHash::qsort(item *conj, int esq, int dir)
+void TabelaHash::qsort(item *conj, int esq, int dir) // quicksort
 {
   if (esq < dir)
   {
@@ -116,19 +108,19 @@ void TabelaHash::qsort(item *conj, int esq, int dir)
   }
 }
 
-int TabelaHash::hash1(unsigned long key)
+int TabelaHash::hash1(unsigned long key) // funcao de dispersao 1
 {
   return (key % tam_max);
 }
 
-int TabelaHash::hash2(unsigned long key)
+int TabelaHash::hash2(unsigned long key) // funcao de dispersao 2
 {
   return (primo - (key % primo));
 }
 
-void TabelaHash::rehash()
+void TabelaHash::rehash() // reestrutura para uma tabela maior
 {
-  cout << "<Iniciando rehashing...>" << endl;
+  // cout << "[Iniciando rehashing...]" << endl;
   TabelaHash aux_tabelaHash(tam_max * 2); // nova tabela 2x maior
   for (int i = 0; i < tam_max; i++)
   {
@@ -145,28 +137,26 @@ void TabelaHash::rehash()
   tam_max = aux_tabelaHash.tam_max;
   primo = aux_tabelaHash.primo;
   qtd = aux_tabelaHash.qtd;
-  cout << "<Rehasing efetuado.>" << endl;
+  // cout << "[Rehasing efetuado.]" << endl;
 }
 
-unsigned long TabelaHash::hash_djb2(char *cstr)
+unsigned long TabelaHash::hash_djb2(char *cstr) // hash de string para int positivo
 {
-  unsigned long hash = 5381;
+  unsigned long hash = 5381; // primo
   int c;
-  while (c = *cstr++)
-    hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+  while (c = *cstr++)                // percorre cstr
+    hash = ((hash << 5) + hash) + c; // hash * 33 + c, atraves de shift
   return hash;
 }
 
-void TabelaHash::insereChave(char *str)
+void TabelaHash::insereChave(char *str) // insere chave na tabela
 {
-  if (qtd > 0.75 * tam_max)
+  if (qtd > 0.75 * tam_max) // se fator excede 0.75 aumenta tabela
   {
     rehash();
   }
-
   int key = hash_djb2(str);
   int iHash1 = hash1(key);
-
   if (tabela[iHash1].valor != 0) // se colisao ocorre
   {
     if (strcmp(tabela[iHash1].chave, str) == 0) // se string coincidir
@@ -207,42 +197,34 @@ void TabelaHash::insereChave(char *str)
   }
 }
 
-void TabelaHash::buscaChave(char *str)
+void TabelaHash::mostraTabela(int n) // exibe tabela valida
 {
-  unsigned long key = hash_djb2(str);
-  int iHash1 = hash1(key);
-  int iHash2 = hash2(key);
-  int i = 0;
-  while ((strcmp(tabela[(iHash1 + i * iHash2) % tam_max].chave, str) != 0))
+  if (n > tam_max)
   {
-    if (tabela[(iHash1 + i * iHash2) % tam_max].chave[0] == '\0')
-    {
-      cout << str << " nao existe!" << endl;
-      return;
-    }
-    i++;
+    n = tam_max;
   }
-  cout << str << " encontrado!" << endl;
-}
-
-void TabelaHash::mostraTabela(int n)
-{
   for (int i = 0; i < n; i++)
   {
-    if (tabela[i].chave[0] != '\0')
-      cout << i << " ----> " << tabela[i].chave << " : " << tabela[i].valor << endl;
+    if (tabela[i].valor != 0)
+      cout << (i + 1) << " ----> " << tabela[i].chave << " : " << tabela[i].valor << endl;
   }
 }
 
-string TabelaHash::strTabela(int n){
-  string str="";
-  for(int i = 0;i<n;i++){
-    if (tabela[i].chave[0] != '\0')
-      str += i, " ----> ", tabela[i].chave, " : " + tabela[i].valor,'\n';
+string TabelaHash::linhaTabela(int n) // retorna string da linha n da tabela
+{
+  if (n > tam_max)
+  {
+    n = tam_max;
+  }
+  string str = "";
+  {
+    if (tabela[n].valor != 0)
+      str += to_string(n + 1) + " ----> " + string(tabela[n].chave) + " : " + to_string(tabela[n].valor) + '\n';
   }
   return str;
 }
 
+// getters
 TabelaHash::item *TabelaHash::getTabela()
 {
   return this->tabela;
