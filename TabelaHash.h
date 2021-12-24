@@ -18,10 +18,10 @@ private:
   bool checaPrimo(int n);
   int primoMaior(int n);
   int primoMenor(int n);
-  void rehash();
+  unsigned long hash_string(char *cstr);
   int hash1(unsigned long key);
   int hash2(unsigned long key);
-  unsigned long hash_djb2(char *cstr);
+  void rehash();
   int qpart(item *conj, int esq, int dir);
 
 public:
@@ -30,8 +30,8 @@ public:
   ~TabelaHash();
   item *getTabela();
   int getTamMax();
-  void qsort(item *conj, int esq, int dir);
   void insereChave(char *str);
+  void qsort(item *conj, int esq, int dir);
   void mostraTabela(int n);
   string linhaTabela(int n);
 };

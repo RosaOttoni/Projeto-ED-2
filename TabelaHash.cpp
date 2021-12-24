@@ -33,8 +33,8 @@ TabelaHash::TabelaHash(int n) // construtor com param de tamanho
 
 TabelaHash::TabelaHash() // construtor padrao
 {
-  tam_max = 101;
-  primo = 97;
+  tam_max = 11;
+  primo = 7;
   tabela = new item[tam_max];
   qtd = 0;
   for (int i = 0; i < tam_max; i++)
@@ -79,33 +79,13 @@ int TabelaHash::primoMenor(int n) // busca primo menor para definir primo do has
   return (primoMenor(n - 1));
 }
 
-int TabelaHash::qpart(item *conj, int esq, int dir) // particiona do quicksort
+unsigned long TabelaHash::hash_string(char *cstr) // hash de string para int positivo
 {
-  int i = (esq - 1);
-  for (int j = esq; j < dir; j++)
-  {
-    if (conj[j].valor > conj[dir].valor)
-    {
-      i++;
-      item temp = conj[i];
-      conj[i] = conj[j];
-      conj[j] = temp;
-    }
-  }
-  item temp = conj[i + 1];
-  conj[i + 1] = conj[dir];
-  conj[dir] = temp;
-  return (i + 1);
-}
-
-void TabelaHash::qsort(item *conj, int esq, int dir) // quicksort
-{
-  if (esq < dir)
-  {
-    int part = qpart(conj, esq, dir);
-    qsort(conj, esq, part - 1);
-    qsort(conj, part + 1, dir);
-  }
+  unsigned long hash = 7129; // primo
+  int c;
+  while (c = *cstr++)                // percorre cstr
+    hash = ((hash << 4) + hash) + c; // hash * 17 + c, atraves de shift
+  return hash;
 }
 
 int TabelaHash::hash1(unsigned long key) // funcao de dispersao 1
@@ -140,13 +120,33 @@ void TabelaHash::rehash() // reestrutura para uma tabela maior
   // cout << "[Rehasing efetuado.]" << endl;
 }
 
-unsigned long TabelaHash::hash_djb2(char *cstr) // hash de string para int positivo
+void TabelaHash::qsort(item *conj, int esq, int dir) // quicksort
 {
-  unsigned long hash = 5381; // primo
-  int c;
-  while (c = *cstr++)                // percorre cstr
-    hash = ((hash << 5) + hash) + c; // hash * 33 + c, atraves de shift
-  return hash;
+  if (esq < dir)
+  {
+    int part = qpart(conj, esq, dir);
+    qsort(conj, esq, part - 1);
+    qsort(conj, part + 1, dir);
+  }
+}
+
+int TabelaHash::qpart(item *conj, int esq, int dir) // particiona do quicksort
+{
+  int i = (esq - 1);
+  for (int j = esq; j < dir; j++)
+  {
+    if (conj[j].valor > conj[dir].valor)
+    {
+      i++;
+      item temp = conj[i];
+      conj[i] = conj[j];
+      conj[j] = temp;
+    }
+  }
+  item temp = conj[i + 1];
+  conj[i + 1] = conj[dir];
+  conj[dir] = temp;
+  return (i + 1);
 }
 
 void TabelaHash::insereChave(char *str) // insere chave na tabela
@@ -155,7 +155,7 @@ void TabelaHash::insereChave(char *str) // insere chave na tabela
   {
     rehash();
   }
-  int key = hash_djb2(str);
+  int key = hash_string(str);
   int iHash1 = hash1(key);
   if (tabela[iHash1].valor != 0) // se colisao ocorre
   {
