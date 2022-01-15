@@ -19,15 +19,15 @@ void imprimeMenu(){
     cout<<"|__________________________________________|"<<endl<<endl;
 }
 
-int main(int argc, char const *argv[])
+int main(int argc, char *argv[])
 {
-    int v[5] = {10000, 50000, 100000, 500000, 1000000};
+    /*int v[5] = {10000, 50000, 100000, 500000, 1000000};
 
     ofstream xpto("input.dat", ios::binary);
 
     xpto.write((char*)v, sizeof(int)*5);
 
-    xpto.close();
+    xpto.close();*/
 
     imprimeMenu();
     int auxmenu;
@@ -65,7 +65,7 @@ int main(int argc, char const *argv[])
                 comparacao = 0;
                 movimentacao = 0;
 
-                importaConjunto(n, vet);
+                importaConjunto(argv[1], n, vet);
 
                 high_resolution_clock::time_point inicio = high_resolution_clock::now();
                 quickSort(vet, 0, n - 1, comparacao, movimentacao);
@@ -77,6 +77,9 @@ int main(int argc, char const *argv[])
                 mediaTempo += tempo;
                 arq << setw(6) << j+1 << setw(20) << comparacao << setw(12) << movimentacao << setw(20) << tempo << endl;
 
+                for(int i = 0; i < n; i++){
+                    delete vet[i];
+                }
                 delete[] vet;
             }
             mediaComparacao /= 5;
@@ -105,7 +108,7 @@ int main(int argc, char const *argv[])
                 comparacao = 0;
                 movimentacao = 0;
 
-                importaConjunto(n, vet2);
+                importaConjunto(argv[1], n, vet2);
 
                 high_resolution_clock::time_point inicio = high_resolution_clock::now();
                 timSort(vet2, n - 1, comparacao, movimentacao );
@@ -117,6 +120,9 @@ int main(int argc, char const *argv[])
                 mediaTempo += tempo;
                 arq << setw(6) << j+1 << setw(20) << comparacao << setw(12) << movimentacao << setw(20) << tempo << endl;
 
+                for(int k = 0; k < n; k++){
+                    delete vet2[k];
+                }
                 delete[] vet2;
             }
             mediaComparacao /= 5;
@@ -146,7 +152,7 @@ int main(int argc, char const *argv[])
                 comparacao = 0;
                 movimentacao = 0;
 
-                importaConjunto(n, vet3);
+                importaConjunto(argv[1], n, vet3);
 
                 high_resolution_clock::time_point inicio = high_resolution_clock::now();
                 heapSort(vet3, n, comparacao, movimentacao );
@@ -158,6 +164,9 @@ int main(int argc, char const *argv[])
                 mediaTempo += tempo;
                 arq << setw(6) << j+1 << setw(20) << comparacao << setw(12) << movimentacao << setw(20) << tempo << endl;
 
+                for(int i = 0; i < n; i++){
+                    delete vet3[i];
+                }
                 delete[] vet3;
             }
             mediaComparacao /= 5;
@@ -185,7 +194,7 @@ int main(int argc, char const *argv[])
               cout << "[Obtendo reviews, por favor aguarde...]" << endl;
             }
             Review **veth = new Review*[n];
-            importaConjunto(n, veth);
+            importaConjunto(argv[1], n, veth);
             for (int i = 0; i < n; i++)
             {
               tab.insereChave(veth[i]->getApp_version());
@@ -203,7 +212,7 @@ int main(int argc, char const *argv[])
             Review **vet4 = new Review*[100];
             int comparacao, movimentacao;
 
-            importaConjunto(100, vet4);
+            importaConjunto(argv[1], 100, vet4);
             quickSort(vet4, 0, 99, comparacao, movimentacao);
 
             teste << "Saida do QuickSort" << endl;
@@ -215,7 +224,7 @@ int main(int argc, char const *argv[])
                 teste << "Posted Date: " << vet4[i]->getPosted_date() << endl<<endl;
             }
 
-            importaConjunto(100, vet4);
+            importaConjunto(argv[1], 100, vet4);
             timSort(vet4,100,comparacao, movimentacao);
 
             teste << "Saida do TimSort" << endl;
@@ -227,7 +236,7 @@ int main(int argc, char const *argv[])
                 teste << "Posted Date: " << vet4[i]->getPosted_date() << endl<<endl;
             }
 
-            importaConjunto(100, vet4);
+            importaConjunto(argv[1], 100, vet4);
             heapSort(vet4, 100, comparacao, movimentacao);
 
             teste << "Saida do HeapSort" << endl;
@@ -238,7 +247,7 @@ int main(int argc, char const *argv[])
                 teste << "App Version: " << vet4[i]->getApp_version() << endl;
                 teste << "Posted Date: " << vet4[i]->getPosted_date() << endl<<endl;
             }
-            importaConjunto(100, vet4);
+            importaConjunto(argv[1], 100, vet4);
             TabelaHash tab;
             for (int i = 0; i < 100; i++)
             {
@@ -249,7 +258,7 @@ int main(int argc, char const *argv[])
             for (int i = 0; i < 100; i++)
             {
               teste << tab.linhaTabela(i);
-            }            
+            }
         }
             break;
     }

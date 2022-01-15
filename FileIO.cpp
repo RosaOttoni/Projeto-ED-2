@@ -184,10 +184,14 @@ void leituraCsv(string diretorio){
     cout<<"ARQUIVO BINARIO CRIADO COM SUCESSO"<<endl<<endl;
 
 }
-void importaConjunto (int n, Review *vet[]){
+void importaConjunto (char *nomeDiretorio, int n, Review *vet[]){
     int aux;
 
-    ifstream infile("tiktok_app_reviews.bin",ios::binary);
+    char nomeArquivo[200];
+
+    sprintf(nomeArquivo, "%s%s", nomeDiretorio, "tiktok_app_reviews.bin");
+
+    ifstream infile(nomeArquivo,ios::binary);
 
     srand(time(NULL));
 

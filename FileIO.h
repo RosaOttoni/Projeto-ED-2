@@ -14,7 +14,7 @@ void testeImportacao();
 
 void leituraCsv(string diretorio);
 
-void importaConjunto(int n, Review *vet[]);
+void importaConjunto (char *nomeDiretorio, int n, Review *vet[]);
 
 void imprimeConjunto (int n, Review *vet[]);
 
