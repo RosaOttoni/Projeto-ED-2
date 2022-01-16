@@ -4,6 +4,7 @@
 #include <ctime>
 #include "Review.h"
 #include "FileIO.h"
+#include "ReviewNode.h"
 
 using namespace std;
 
@@ -184,6 +185,7 @@ void leituraCsv(string diretorio){
     cout<<"ARQUIVO BINARIO CRIADO COM SUCESSO"<<endl<<endl;
 
 }
+
 void importaConjunto (char *nomeDiretorio, int n, Review *vet[]){
     int aux;
 
@@ -202,6 +204,34 @@ void importaConjunto (char *nomeDiretorio, int n, Review *vet[]){
         infile.read((char*) vet[i], sizeof(Review));
     }
     infile.close();
+}
+
+void importaConjunto (char *nomeDiretorio, int n, ReviewNode *vet[]){
+    int aux;
+
+    char nomeArquivo[200];
+
+    sprintf(nomeArquivo, "%s%s", nomeDiretorio, "tiktok_app_reviews.bin");
+
+    ifstream infile(nomeArquivo,ios::binary);
+
+    if(infile.is_open()){
+        srand(time(NULL));
+
+        for(int i = 0; i < n; i++){
+            aux = rand()% num_registro;
+            Review *auxReview = new Review;
+            infile.seekg(aux* sizeof(Review));
+            infile.read((char*) auxReview, sizeof(Review));
+            vet[i] = new ReviewNode(auxReview->getReview_id(), aux);
+            delete auxReview;
+        }
+        infile.close();
+    }
+    else{
+        cout << "Arquivo de entrada nao encontrado no diretorio especificado!" << endl;
+        exit(1);
+    }
 }
 
 void imprimeConjunto (int n, Review *vet[]){

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <ctime>
 #include "Review.h"
+#include "ReviewNode.h"
 
 using namespace std;
 
@@ -15,6 +16,8 @@ void testeImportacao();
 void leituraCsv(string diretorio);
 
 void importaConjunto (char *nomeDiretorio, int n, Review *vet[]);
+
+void importaConjunto (char *nomeDiretorio, int n, ReviewNode *vet[]);
 
 void imprimeConjunto (int n, Review *vet[]);
 
