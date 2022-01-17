@@ -159,9 +159,9 @@ void ArvoreVermelhoPreto::consertaInsercao(NoVP *no){
         else{
             //Caso 3
             if(getCor(pai) == VERMELHO && getCor(tio) == PRETO){
-                    //Se avô menor que pai o nó está na sub-árvore direita
+                    //Se avï¿½ menor que pai o nï¿½ estï¿½ na sub-ï¿½rvore direita
                 if(strcmp(avo->getInfo()->getId(), pai->getInfo()->getId()) < 0){
-                    //Se pai menor que nó, ele está na sub-árvore direita(rotação simples a esquerda)
+                    //Se pai menor que nï¿½, ele estï¿½ na sub-ï¿½rvore direita(rotaï¿½ï¿½o simples a esquerda)
                     if(strcmp(pai->getInfo()->getId(), no->getInfo()->getId()) < 0){
                         pai->recolore();
                         avo->recolore();
@@ -185,7 +185,7 @@ void ArvoreVermelhoPreto::consertaInsercao(NoVP *no){
                         }
                     }
                     else{
-                        //Se pai não é menor que nó, ele está na sub-árvore esquerda(rotação dupla a esquerda)
+                        //Se pai nï¿½o ï¿½ menor que nï¿½, ele estï¿½ na sub-ï¿½rvore esquerda(rotaï¿½ï¿½o dupla a esquerda)
                         no->recolore();
                         avo->recolore();
                         // Se o no for a raiz, deve-se atualizar o ponteiro da raiz
@@ -213,9 +213,9 @@ void ArvoreVermelhoPreto::consertaInsercao(NoVP *no){
                     }
                 }
                 else{
-                    //Se avô maior que pai o nó está na sub-árvore esquerda
+                    //Se avï¿½ maior que pai o nï¿½ estï¿½ na sub-ï¿½rvore esquerda
                     if(strcmp(pai->getInfo()->getId(), no->getInfo()->getId()) > 0){
-                        //Se pai maior que nó, ele está na sub-árvore esquerda(rotação simples a direita)
+                        //Se pai maior que nï¿½, ele estï¿½ na sub-ï¿½rvore esquerda(rotaï¿½ï¿½o simples a direita)
                         pai->recolore();
                         avo->recolore();
                         // Se o no for a raiz, deve-se atualizar o ponteiro da raiz
@@ -238,7 +238,7 @@ void ArvoreVermelhoPreto::consertaInsercao(NoVP *no){
                         }
                     }
                     else{
-                        //Se pai não é maior que nó, ele está na sub-árvore direita(rotação dupla a direita)
+                        //Se pai nï¿½o ï¿½ maior que nï¿½, ele estï¿½ na sub-ï¿½rvore direita(rotaï¿½ï¿½o dupla a direita)
                         no->recolore();
                         avo->recolore();
                         // Se o no for a raiz, deve-se atualizar o ponteiro da raiz
@@ -283,7 +283,7 @@ void ArvoreVermelhoPreto::insere(ReviewNode *info, int &comparacoes){
         NoVP *pai = nullptr;
         NoVP *no  = new NoVP(info);
 
-        //Encontra a posição de inserção e o pai
+        //Encontra a posiï¿½ï¿½o de inserï¿½ï¿½o e o pai
         while(aux != nullptr){
             pai = aux;
             comparacoes++;
@@ -297,7 +297,7 @@ void ArvoreVermelhoPreto::insere(ReviewNode *info, int &comparacoes){
         }
         no->setPai(pai);
 
-        //Decide se é filho a direita ou esquerda
+        //Decide se ï¿½ filho a direita ou esquerda
         comparacoes++;
         if(strcmp(no->getInfo()->getId(), pai->getInfo()->getId()) < 0){
             pai->setEsq(no);
@@ -313,7 +313,7 @@ ReviewNode *ArvoreVermelhoPreto::busca(char* id, int &comparacoes){
     NoVP *aux = this->raiz;
     comparacoes = 0;
 
-    //Encontra a posição de inserção e o pai
+    //Encontra a posiï¿½ï¿½o de inserï¿½ï¿½o e o pai
     while(aux != nullptr){
         comparacoes++;
         if(strcmp(id, aux->getInfo()->getId()) == 0){
@@ -331,4 +331,64 @@ ReviewNode *ArvoreVermelhoPreto::busca(char* id, int &comparacoes){
     }
     return nullptr;
 }
+
+
+NoVP* ArvoreVermelhoPreto::busca(ReviewNode *no,  int &comparacoes)
+{
+    NoVP *aux = this->raiz;
+    comparacoes = 0;  
+     
+    while (aux != NULL)
+    {
+        if (no->getId() < aux->getInfo()->getId())
+        {
+            comparacoes+=2;
+            if (aux->getEsq() == NULL)
+                break;
+            else
+                aux = aux->getEsq();
+               
+        }
+        else if (no->getId() == aux->getInfo()->getId())
+        {
+            comparacoes+=2;
+            comparacoes++;
+            if(no->getPosicaoArquivo() < aux->info->getPosicaoArquivo())
+            {
+                comparacoes++;
+                if (aux->getEsq() == NULL)
+                    break;
+                else
+                    aux = aux->getEsq();
+                    
+            }
+            else if(no->getPosicaoArquivo() == aux->info->getPosicaoArquivo())
+            {
+                comparacoes+=2;
+                break;
+            }
+            else
+            {
+                comparacoes+=2;
+                comparacoes++;
+                if (aux->getDir() == NULL)
+                    break;
+                else
+                    aux = aux->getDir();
+            }
+        }
+        else
+        {
+            comparacoes+=2;
+            comparacoes++;
+            if (aux->getDir() == NULL)
+                break;
+            else
+                aux = aux->getDir();
+        }
+    }
+    return aux; 
+}
+
+
 

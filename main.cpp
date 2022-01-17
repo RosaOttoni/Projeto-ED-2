@@ -3,6 +3,7 @@
 #include "Ordenacao.h"
 #include "TabelaHash.h"
 #include "ArvoreVermelhoPreto.h"
+#include "Arvores.h"
 #include <fstream>
 #include <iomanip>
 #include <chrono>
@@ -22,7 +23,7 @@ void imprimeMenu(){
 
 int main(int argc, char *argv[])
 {
-    int comparacoes, n = 5, totalComparacoes, opcao;
+    int comparacoes, n = 10, totalComparacoes, opcao;// n = 1000000
 
     imprimeMenu();
 
@@ -31,20 +32,88 @@ int main(int argc, char *argv[])
     while(opcao != 3){
         switch(opcao){
 
-            case 1:{
+            case 1:{ // arvore vermelho e preta
                 ArvoreVermelhoPreto *arvoreVP = new ArvoreVermelhoPreto();
 
                 ReviewNode **vet = new ReviewNode*[n];
 
                 importaConjunto(argv[1], n, vet);
+                cout<<"Registros importados...."<<endl;
 
                 totalComparacoes = 0;
+                comparacoes = 0;
 
                 for(int i = 0; i < n; i++){
                     arvoreVP->insere(vet[i], comparacoes);
                     totalComparacoes += comparacoes;
                 }
+                cout<<endl<<" ___________________SUBMENU_____________________|"<<endl;
+                cout<<"| Para analise de estruturas, digite [1]              |"<<endl;
+                cout<<"| Para modulo de testes [2]                           |"<<endl;
+                cout<<"| Para finalizar digite [0]                           |"<<endl;
+                cout<<"|_____________________________________________________|"<<endl<<endl;
+                int op2;
+                        
+                cin>> op2;
+                while(op2 != 3)
+                {
+        
+                    switch(op2)
+                    {
+                        case 1: 
+                        {                        
+                            int b = 100;
+                                                           
+                            Arvores arvores;                                    
+                                    //analise (busca de 100 conjuntos)                            
+                            arvores.analise(b); // imprime etapa 3
+                            cout<<"registros analisados";
+                            
+                        }
+                        break; 
+                        case 2:// modulo teste
+                        {
+                            char *id;
+                            cout<< "Digite o numero desejado busca na arvore:";
+                            cin>>id;
+                            fstream arq;
+                            arq.open("Dados.txt");
+        
+                            if(arq)
+                            {
+                                ofstream busca;                                
+                                busca.open("saidaBusca.txt");
+                                
+                                if(busca)
+                                {
+                                    while(!arq.eof())
+                                    {
+                                        int comparacoes;
 
+                                        ReviewNode **vet = new ReviewNode*[n];
+                                        high_resolution_clock::time_point inicio = high_resolution_clock::now();                                
+                                        for(int i=0;i<n;i++)
+
+                                        arvoreVP->busca(id, comparacoes);
+                                        totalComparacoes += comparacoes;
+                                        auto resultado = high_resolution_clock::now() - inicio;
+                                        double tempo = duration_cast<nanoseconds >(resultado).count();
+                                        
+                                        
+                                        busca << "Arvore-VP: \n" << "Tempo: " << tempo/1000000000 << "\nComparações: " <<totalComparacoes << endl;
+
+                                        busca << "ID" << id << endl<<endl;
+                                        busca.close();
+                                    }
+                                }else
+                                    cout << "Nao foi possivel criar o arquivo de saida da busca" << endl;
+                                    busca.close();                        
+                            }else
+                            cout << "Erro ao abrir arquivo de entrada" << endl;
+                        }
+                        break;
+                    } 
+                }                
                 delete arvoreVP;
             }
             break;

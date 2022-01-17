@@ -41,6 +41,8 @@ class ArvoreVermelhoPreto{
         void insere(ReviewNode *info,  int &comparacoes);
 
         ReviewNode *busca(char *id, int &comparacoes);
+        
+        NoVP *busca(ReviewNode *no,  int &comparacoes);
 };
 
 #endif // ARVOREVERMELHOPRETO_H_INCLUDED
