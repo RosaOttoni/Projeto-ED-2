@@ -10,79 +10,121 @@
 using namespace std;
 using namespace chrono;
 
-Arvores::Arvores(){}
-void Arvores::analise(int n){
+void analise(int b, int m, int n, char *diretorio){
+    ofstream arq;
+    arq.open("saida.txt");
 
+    int comparacoes, totalComparacoes, comparacaoInsercao = 0, comparacaoBusca = 0, aux;
+    double tempoInsercao = 0, tempoBusca = 0, media;
 
-   int comparacoes;
-   n=10;
-   for(int cont=1; cont<n; cont++)
-   {
+    if(arq){
 
-       cout << "Execução e resultados da Arvore Vermelho e Preta: " << cont << "..." << endl;
-        
-        fstream arq;
-        arq.open("Dados.txt");
-        
-        if(arq)
-        {
-         //Criando arquivo para salvar estatísticas de busca
-            ofstream arqSaidaI;
-            arqSaidaI  << "saidaBusca" + cont ; 
-            arqSaidaI.open("saidaInsercao.txt");
+        arq << "Resultados para Arvore Vermelho e Preto N = " << n << " B = " << b << endl;
 
-            if (arqSaidaI)
-            {
-                ofstream saidaBusca;
-                saidaBusca  << "saidaBusca" + cont ; 
-                saidaBusca.open("saidaBusca.txt");
-                
-                if(saidaBusca)
-                {
-                    //Para busca nas árvores
-                    while(!arq.eof())
+        for(int cont = 1; cont <= m; cont++){
+            cout << "Execucao e resultados da Arvore Vermelho e Preta: " << cont << "..." << endl;
+            arq << "TESTE " << cont << endl;
 
-                    {
-                        ArvoreVermelhoPreto *arvoreVP;
-                        
-                        ReviewNode **vet = new ReviewNode*[n];
-                         
-                        // cout<<"Buscando..";              
+            ArvoreVermelhoPreto *arvoreVP = new ArvoreVermelhoPreto();
+            ReviewNode **vet = new ReviewNode*[n];
 
-                        
-                        high_resolution_clock::time_point inicio = high_resolution_clock::now();
-                        saidaBusca << " \nTamanho do conjunto: N: " << n << endl; 
-                        comparacoes = 0;
-                            
-                        //Buscando na Árvore Vermelha e Preta
-                        for(int i=0; i<n; i++)
-                        arvoreVP->insere(vet[i], comparacoes);
-                        auto resultado = high_resolution_clock::now() - inicio;
-                        double tempo = duration_cast<nanoseconds >(resultado).count();
-                        arqSaidaI << "Arvore-VP: \n" << "Tempo: " << tempo/1000000000 << "\nComparações: " << comparacoes << endl;
+            importaConjunto(diretorio, n, vet);
 
-                        comparacoes = 0;
-                        
-                        for(int i=0; i<n; i++)
-                        arvoreVP->busca(vet[i], comparacoes);
-                        resultado = high_resolution_clock::now() - inicio;
-                        tempo = duration_cast<nanoseconds >(resultado).count();                     
-                        saidaBusca << "Arvore-VP: \n" << "Tempo: " << tempo/1000000000 << "\nComparações: " << comparacoes << endl;
+            totalComparacoes = 0;
 
+            high_resolution_clock::time_point inicio = high_resolution_clock::now();
 
-                        delete []vet;
-                    }
-                    saidaBusca.close();
-                }
-                else
-                    cout << "Erro ao criar o arquivo de saida da insercao" << endl;
-                    arqSaidaI.close();
+            for(int i = 0; i < n; i++){
+                arvoreVP->insere(vet[i], comparacoes);
+                totalComparacoes += comparacoes;
             }
-            else
-            cout << "" << endl;
-            arq.close();
+
+            auto resultado = high_resolution_clock::now() - inicio;
+            double tempo = duration_cast<milliseconds>(resultado).count();
+
+
+            arq << "Tempo de Insercao: " << tempo << endl;
+            arq << "Comparacoes da Insercao: " << totalComparacoes << endl;
+
+            comparacaoInsercao += totalComparacoes;
+            tempoInsercao += tempo;
+
+            inicio = high_resolution_clock::now();
+
+            totalComparacoes = 0;
+
+            for(int i = 0; i < b; i++){
+                 aux = rand()% n;
+                 arvoreVP->busca(vet[aux]->getId(), comparacoes);
+                 totalComparacoes += comparacoes;
+            }
+
+            resultado = high_resolution_clock::now() - inicio;
+            tempo = duration_cast<nanoseconds >(resultado).count();
+
+            arq << "Tempo de Busca: " << tempo << endl;
+            arq << "Comparacoes da Busca: " << totalComparacoes << endl;
+
+            comparacaoBusca += totalComparacoes;
+            tempoBusca += tempo;
+
+
+            for(int i = 0; i < n; i++){
+                delete vet[i];
+            }
+
+            delete []vet;
+            delete arvoreVP;
+
+            cout << "Finalizado teste " << cont << endl;
+
         }
-        else
-         cout << "Erro ao abrir arquivo de entrada" << endl;
-   }
+        media = tempoInsercao / (double)m;
+
+        arq << "Tempo Medio de Insercao: " << media << endl;
+
+        media = comparacaoInsercao / (double)m;
+
+        arq << "Media de Comparacoes da Insercao: " << media << endl;
+
+        media = tempoBusca / (double)m;
+
+        arq << "Tempo Medio de Busca: " << media << endl;
+
+        media = comparacaoBusca / (double)m;
+
+        arq << "Media de Comparacoes da Busca: " << media << endl;
+
+        arq.close();
+
+    }else
+        cout << "Erro ao criar o arquivo de saida!" << endl;
+}
+
+void busca(char *diretorio){
+
+    int n = 1000000, comparacoes;
+    char id[90];
+
+    ArvoreVermelhoPreto *arvoreVP = new ArvoreVermelhoPreto();
+    ReviewNode **vet = new ReviewNode*[n];
+
+    importaConjunto(diretorio, n, vet);
+
+     for(int i = 0; i < n; i++){
+        arvoreVP->insere(vet[i], comparacoes);
+    }
+
+    cout << "Digite um ID para busca: ";
+    cin >> id;
+
+    ReviewNode *node = arvoreVP->busca(id, comparacoes);
+
+    if(node != nullptr){
+        acessaRegistro(node->getPosicaoArquivo(), diretorio);
+    }
+    else{
+        cout << "Registro nao encontrado na arvore!" << endl;
+    }
+
 }

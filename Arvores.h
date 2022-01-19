@@ -1,14 +1,11 @@
 #ifndef ARVORES_H
 #define ARVORES_H
 
-
 #include "FileIO.h"
 #include "ReviewNode.h"
 
+void analise(int b, int m, int n, char *diretorio);
 
-class Arvores{
-    public:
-        Arvores();
-        void analise(int n);
-};
+void busca(char *diretorio);
+
 #endif

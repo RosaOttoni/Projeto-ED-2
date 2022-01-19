@@ -8,15 +8,13 @@
 
 class NoVP{
     private:
-        //ReviewNode *info;
+        ReviewNode *info;
         NoVP *esq;
         NoVP *dir;
         NoVP *pai;
         int cor;
 
     public:
-         ReviewNode *info;
-
         NoVP(ReviewNode *info);
 
         ~NoVP();

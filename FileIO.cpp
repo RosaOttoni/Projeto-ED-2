@@ -10,10 +10,14 @@ using namespace std;
 
 const int num_registro = 3660723;
 
-void acessaRegistro(int i){
+void acessaRegistro(int i, char *diretorio){
     Review* review = new Review();
 
-    ifstream infile("tiktok_app_reviews.bin",ios::binary);
+    char nomeArquivo[200];
+
+    sprintf(nomeArquivo, "%s%s", diretorio, "tiktok_app_reviews.bin");
+
+    ifstream infile(nomeArquivo,ios::binary);
 
     infile.seekg(i*sizeof(Review));
     infile.read((char*)review, sizeof(Review));
@@ -48,80 +52,6 @@ void geraArquivo(int n, int *vet){
     infile.close();
     arq.close();
 }
-
-void testeImportacao()
-{
-    int op;
-
-    cout << "Para exibir saida em tela digite 0 e para salvar em um arquivo de texto digite 1"<<endl;
-    cin >> op;
-
-    while(op != 0 && op != 1){
-        cout << "Erro de digitacao, tente de novo"<<endl;
-        cout << "Para exibir saida em tela digite 0 e para salvar em um arquivo de texto digite 1"<<endl;
-        cin >> op;
-    }
-
-    srand(time(NULL));
-
-    if (op == 0){
-        cout<<"Por padrao o numeros de registros sorteados e exibidos e de 10, gostaria de alterar a quantidade de registros exibidos? Se sim digite 0, Nao digite 1."<<endl;
-        int op1;
-        cin>>op1;
-        if(op1==1){
-            int n = 10;
-            int aux = 0;
-            for(int i=0; i<n; i++){
-                aux = rand()% num_registro;
-                acessaRegistro(aux);
-            }
-        }
-        else if(op1==0){
-            cout<<"Quantos registros gostaria de visualizar no console?"<<endl;
-            int n;
-            cin>>n;
-            int aux = 0;
-            for(int i=0; i<n; i++){
-                aux = rand()% num_registro;
-                acessaRegistro(aux);
-            }
-        }
-        else{
-            cout<<"Erro, opcao invalida"<<endl;
-        }
-
-    }
-    else if(op == 1){
-        cout<<"Por padrao o numeros de registros sorteados e salvos em Dados.txt e de 100, gostaria de alterar a quantidade de registros exibidos? Se sim digite 0, Nao digite 1."<<endl;
-        int op1;
-        cin>>op1;
-        if(op1==1){
-            int n = 100;
-            int vet[n];
-                for(int i=0; i<n; i++){
-                    vet[i]=rand()% num_registro;
-                }
-             geraArquivo(n, vet);
-        }
-        else if(op1==0){
-            cout<<"Quantos registros gostaria de salvar em Dados.txt?"<<endl;
-            int n;
-            cin>>n;
-            int vet[n];
-                for(int i=0; i<n; i++){
-                    vet[i]=rand()% num_registro;
-                }
-             geraArquivo(n, vet);
-        }
-        else{
-            cout<<"Erro, opcao invalida"<<endl;
-        }
-    }
-    else{
-        cout<<"Erro, opcao invalida"<<endl;
-    }
-}
-
 void leituraCsv(string diretorio){
     ifstream infile;
     ofstream outfile;
@@ -216,7 +146,6 @@ void importaConjunto (char *nomeDiretorio, int n, ReviewNode *vet[]){
     ifstream infile(nomeArquivo,ios::binary);
 
     if(infile.is_open()){
-        srand(time(NULL));
 
         for(int i = 0; i < n; i++){
             aux = rand()% num_registro;

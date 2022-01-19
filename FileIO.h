@@ -7,11 +7,9 @@
 
 using namespace std;
 
-void acessaRegistro(int i);
+void acessaRegistro(int i, char *diretorio);
 
 void geraArquivo(int n, int *vet);
-
-void testeImportacao();
 
 void leituraCsv(string diretorio);
 
