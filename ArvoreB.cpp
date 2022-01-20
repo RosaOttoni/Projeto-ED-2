@@ -105,7 +105,6 @@ void ArvoreB::auxInsert(NodeB *no, chave *k)
             {
                 if (compara(k->id, no->chaves[i]->id) <=1)
                 {
-                    cout<<"aquiiiiii"<<" cachave"<<no->chaves[i]->id<<endl;
                     auxInsert(no->folhas[i], k);
                     return;
                 }
