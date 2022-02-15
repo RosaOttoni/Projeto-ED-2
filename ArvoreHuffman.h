@@ -1,6 +1,7 @@
 #ifndef ARVOREHUFFMAN_H_INCLUDED
 #define ARVOREHUFFMAN_H_INCLUDED
 #include "NoHuffman.h"
+#include <string>
 
 using namespace std;
 
@@ -8,7 +9,7 @@ using namespace std;
 class ArvoreHuffman
 {
     public:
-        ArvoreHuffman(); 
+        ArvoreHuffman(string frase); 
         ~ArvoreHuffman(); 
 
     private:
@@ -16,10 +17,13 @@ class ArvoreHuffman
         NoHuffman* raiz; //Nó raiz    
         NoHuffman** alfabeto; //Nós da árvore 
         int* frequencia; //Vetor de frequências
-        int tamanho; //guarda o tamanho do alfabeto
+        int tamanhoAlf; //guarda o tamanho do alfabeto
 
         void deletaNo(NoHuffman* p); 
-        void criaArvore(); 
+        int verifica(char c, int tam);
+        int criaAlfabeto(string chave);
+        void construirArvore();
+        void inserir(int tam);
 };
 
 #endif // ARVOREHUFFMAN_H_INCLUDED
