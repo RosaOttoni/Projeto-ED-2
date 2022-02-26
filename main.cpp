@@ -1,81 +1,81 @@
 #include "Review.h"
 #include "FileIO.h"
 #include "Ordenacao.h"
+#include "testaOrdenacao.h"
 #include "TabelaHash.h"
 #include "ArvoreVermelhoPreto.h"
 #include "Arvores.h"
+#include "Huffman.h"
+#include "testaHuffman.h"
 #include <fstream>
 #include <iomanip>
 #include <chrono>
 #include <cstdlib>
+#include <random>
 
 using namespace std;
 using namespace std::chrono;
 
 void imprimeMenu(){
-    cout<<"____________________MENU__________________________"<<endl;
-    cout<<"| Para executar, escolha uma das opcoes abaixo:  |"<<endl;
-    cout<<"| 1 - Arvore Vermelho-Preto                      |"<<endl;
-    cout<<"| 2 - Arvore B                                   |"<<endl;
-    cout<<"| 3 - SAIR                                       |"<<endl;
-    cout<<"|________________________________________________|"<<endl<<endl;
+    cout<<"_____________________________MENU________________________________________"<<endl;
+    cout<<"| Para executar, escolha uma das opcoes abaixo para gerar as metricas:  |"<<endl;
+    cout<<"| 1 - QuickSort                                                         |"<<endl;
+    cout<<"| 2 - HeapSort                                                          |"<<endl;
+    cout<<"| 3 - TimSort                                                           |"<<endl;
+    cout<<"| 4 - Arvore VP                                                         |"<<endl;
+    cout<<"| 5 - Arvore B                                                          |"<<endl;
+    cout<<"| 6 - Huffman                                                           |"<<endl;
+    cout<<"| 7 - SAIR                                                              |"<<endl;
+    cout<<"|_______________________________________________________________________|"<<endl<<endl;
 }
 
 int main(int argc, char *argv[])
 {
-    int comparacoes, totalComparacoes, opcao;
+    int opcao, n;
 
-    srand(time(NULL));
+    //srand(time(NULL));
+
+    if(argc != 2){
+        cout << "Erro: Diretorio nao especificado" << endl;
+        return 0;
+    }
+
+    leituraCsv(argv[1]);
 
     imprimeMenu();
 
-    cin>> opcao;
+    cin >> opcao;
 
-    while(opcao != 3){
+    while(opcao != 7){
         switch(opcao){
-
-            case 1:{ // arvore vermelho e preta
-
-                cout<<" ___________________SUBMENU___________________________"<<endl;
-                cout<<"| 1 - Para analise de estruturas                      |"<<endl;
-                cout<<"| 2 - Para modulo de testes                           |"<<endl;
-                cout<<"| 3 - Para finalizar digite                           |"<<endl;
-                cout<<"|_____________________________________________________|"<<endl<<endl;
-                int op2;
-
-                cin>> op2;
-                while(op2 != 3)
-                {
-
-                    switch(op2)
-                    {
-                        case 1:
-                        {
-                            analise(100, 4, 1000000, argv[1]);
-                        }
-                        break;
-                        case 2:// modulo teste
-                        {
-                            busca(argv[1]);
-                        }
-                        break;
-                    }
-
-                    cin >> op2;
-                }
+            case 1:{
+                testaQuickSort();
             }
             break;
-
-            case 2:
+            case 2:{
+                testaHeapkSort();
+            }
             break;
-
-            default: cout << "Opcao Invalida!" << endl;
+            case 3:{
+                testaTimkSort();
+            }
+            break;
+            case 4:{
+                analise(100, 4, 1000000, argv[1]);
+            }
+            break;
+            case 5:{
+            }
+            break;
+            case 6:{
+                testaHuffman();
+            }
+            default:
+                cout << "Opcao invalida!" << endl;
         }
-
         imprimeMenu();
         cin >> opcao;
     }
-
 
     return 0;
 }

@@ -37,22 +37,22 @@ char ArvoreVermelhoPreto::printCor(int cor){
     return 'P';
 }
 
-void ArvoreVermelhoPreto::imprime()
+void ArvoreVermelhoPreto::imprime(ofstream &arq)
 {
-    cout << endl;
-    imprimePorNivel(this->raiz, 0);
+    arq << endl;
+    imprimePorNivel(this->raiz, 0, arq);
 }
 
-void ArvoreVermelhoPreto::imprimePorNivel(NoVP *p, int nivel)
+void ArvoreVermelhoPreto::imprimePorNivel(NoVP *p, int nivel, ofstream &arq)
 {
     if(p != nullptr)
     {
-        cout << "(" << nivel << ") ";
+        arq << "(" << nivel << ") ";
         for(int i = 1; i <= nivel; i++)
-            cout << "--";
-        cout << p->getInfo()->getId() << "(" << printCor(p->getCor()) << ")" << endl;
-        imprimePorNivel(p->getEsq(), nivel+1);
-        imprimePorNivel(p->getDir(), nivel+1);
+            arq << "--";
+        arq << p->getInfo()->getId() << "(" << printCor(p->getCor()) << ")" << endl;
+        imprimePorNivel(p->getEsq(), nivel+1, arq);
+        imprimePorNivel(p->getDir(), nivel+1, arq);
     }
 }
 

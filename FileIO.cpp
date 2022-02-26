@@ -5,10 +5,15 @@
 #include "Review.h"
 #include "FileIO.h"
 #include "ReviewNode.h"
+#include <random>
 
 using namespace std;
 
-const int num_registro = 3660723;
+int num_registro;
+
+random_device rd;
+
+default_random_engine gen{rd()};
 
 void acessaRegistro(int i, char *diretorio){
     Review* review = new Review();
@@ -59,7 +64,9 @@ void leituraCsv(string diretorio){
     infile.open(diretorio + "tiktok_app_reviews.csv",ios::in);
     outfile.open("tiktok_app_reviews.bin",ios::binary);
 
-    string linha;
+    string linha, linhaAux;
+
+    num_registro = 0;
 
     if(!infile) {
         cout << "Nao foi possivel ler o arquivo" << endl;
@@ -68,13 +75,19 @@ void leituraCsv(string diretorio){
 
     cout<<endl<< "CARREGANDO ARQUIVO CSV, CRIANDO E CONVERTENDO PARA ARQUIVO BINARIO..."<<endl<<endl;
 
-    getline(infile, linha);
-
-    int cont = 0;
+    getline(infile, linhaAux);
 
     while(!infile.eof()){
 
-        getline(infile, linha);
+        getline(infile, linhaAux);
+
+        linha = "";
+
+        for(int i = 0; i < linhaAux.size(); i++){
+            if(linhaAux[i] >= 0 && linhaAux[i] <= 255){
+                linha += linhaAux[i];
+            }
+        }
 
         try{
             int pos = linha.find(",");
@@ -101,7 +114,7 @@ void leituraCsv(string diretorio){
 
             delete review;
 
-            cont++;
+            num_registro++;
 
         }catch(exception e){
             continue;
@@ -111,9 +124,25 @@ void leituraCsv(string diretorio){
     infile.close();
     outfile.close();
 
-    //cout << "Sucesso: " << cont << endl;
     cout<<"ARQUIVO BINARIO CRIADO COM SUCESSO"<<endl<<endl;
 
+}
+
+void importaConjunto(int n, Review *vet[]){
+    int aux;
+
+    ifstream infile("tiktok_app_reviews.bin",ios::binary);
+
+    uniform_int_distribution<> distribuicao(0, num_registro-1);
+
+    for(int i = 0; i < n; i++){
+        //aux = rand()% num_registro;
+        aux = distribuicao(gen);
+        vet[i] = new Review;
+        infile.seekg(aux* sizeof(Review));
+        infile.read((char*) vet[i], sizeof(Review));
+    }
+    infile.close();
 }
 
 void importaConjunto (char *nomeDiretorio, int n, Review *vet[]){
@@ -125,10 +154,11 @@ void importaConjunto (char *nomeDiretorio, int n, Review *vet[]){
 
     ifstream infile(nomeArquivo,ios::binary);
 
-    srand(time(NULL));
+    uniform_int_distribution<> distribuicao(0, num_registro-1);
 
     for(int i = 0; i < n; i++){
-        aux = rand()% num_registro;
+        //aux = rand()% num_registro;
+        aux = distribuicao(gen);
         vet[i] = new Review;
         infile.seekg(aux* sizeof(Review));
         infile.read((char*) vet[i], sizeof(Review));
@@ -136,7 +166,7 @@ void importaConjunto (char *nomeDiretorio, int n, Review *vet[]){
     infile.close();
 }
 
-void importaConjunto (char *nomeDiretorio, int n, ReviewNode *vet[]){
+void importaConjunto (char *nomeDiretorio, int n, ReviewNode *vet[], int indicesBusca[], int m){
     int aux;
 
     char nomeArquivo[200];
@@ -146,9 +176,10 @@ void importaConjunto (char *nomeDiretorio, int n, ReviewNode *vet[]){
     ifstream infile(nomeArquivo,ios::binary);
 
     if(infile.is_open()){
-
+        uniform_int_distribution<> distribuicao(0, num_registro-1);
         for(int i = 0; i < n; i++){
-            aux = rand()% num_registro;
+            //aux = (rand()/(float)RAND_MAX)* num_registro;
+            aux = distribuicao(gen);
             Review *auxReview = new Review;
             infile.seekg(aux* sizeof(Review));
             infile.read((char*) auxReview, sizeof(Review));
@@ -156,6 +187,12 @@ void importaConjunto (char *nomeDiretorio, int n, ReviewNode *vet[]){
             delete auxReview;
         }
         infile.close();
+
+        uniform_int_distribution<> distribuicaoIndices(0, n-1);
+        for(int i = 0; i < m; i++){
+            aux = distribuicaoIndices(gen);
+            indicesBusca[i] = aux;
+        }
     }
     else{
         cout << "Arquivo de entrada nao encontrado no diretorio especificado!" << endl;

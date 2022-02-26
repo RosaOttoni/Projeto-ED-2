@@ -2,6 +2,9 @@
 #define ARVOREVERMELHOPRETO_H_INCLUDED
 
 #include "NoVP.h"
+#include <fstream>
+
+using namespace std;
 
 class ArvoreVermelhoPreto{
     private:
@@ -9,7 +12,7 @@ class ArvoreVermelhoPreto{
 
         char printCor(int cor);
 
-        void imprimePorNivel(NoVP *p, int nivel);
+        void imprimePorNivel(NoVP *p, int nivel, ofstream &arq);
 
         NoVP *getTio(NoVP *no);
 
@@ -30,13 +33,14 @@ class ArvoreVermelhoPreto{
         NoVP* libera(NoVP *p);
 
     public:
+
         ArvoreVermelhoPreto();
 
         ~ArvoreVermelhoPreto();
 
         bool vazia();
 
-        void imprime();
+        void imprime(ofstream &arq);
 
         void insere(ReviewNode *info,  int &comparacoes);
 

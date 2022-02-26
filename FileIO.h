@@ -2,6 +2,7 @@
 #define FILEIO_H_INCLUDED
 #include <iostream>
 #include <ctime>
+#include <random>
 #include "Review.h"
 #include "ReviewNode.h"
 
@@ -13,9 +14,11 @@ void geraArquivo(int n, int *vet);
 
 void leituraCsv(string diretorio);
 
+void importaConjunto(int n, Review *vet[]);
+
 void importaConjunto (char *nomeDiretorio, int n, Review *vet[]);
 
-void importaConjunto (char *nomeDiretorio, int n, ReviewNode *vet[]);
+void importaConjunto (char *nomeDiretorio, int n, ReviewNode *vet[], int indicesBusca[], int m);
 
 void imprimeConjunto (int n, Review *vet[]);
 

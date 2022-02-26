@@ -4,15 +4,17 @@
 #include <fstream>
 #include <cstdlib>
 #include <sstream>
+#include <thread>
 #include "Arvores.h"
 #include "ArvoreVermelhoPreto.h"
+#include "FileIO.h"
 
 using namespace std;
 using namespace chrono;
 
 void analise(int b, int m, int n, char *diretorio){
     ofstream arq;
-    arq.open("saida.txt");
+    arq.open("saida_vp.txt");
 
     int comparacoes, totalComparacoes, comparacaoInsercao = 0, comparacaoBusca = 0, aux;
     double tempoInsercao = 0, tempoBusca = 0, media;
@@ -28,7 +30,9 @@ void analise(int b, int m, int n, char *diretorio){
             ArvoreVermelhoPreto *arvoreVP = new ArvoreVermelhoPreto();
             ReviewNode **vet = new ReviewNode*[n];
 
-            importaConjunto(diretorio, n, vet);
+            int *indicesBusca =  new int[m];
+
+            importaConjunto(diretorio, n, vet, indicesBusca, b);
 
             totalComparacoes = 0;
 
@@ -42,7 +46,6 @@ void analise(int b, int m, int n, char *diretorio){
             auto resultado = high_resolution_clock::now() - inicio;
             double tempo = duration_cast<milliseconds>(resultado).count();
 
-
             arq << "Tempo de Insercao: " << tempo << endl;
             arq << "Comparacoes da Insercao: " << totalComparacoes << endl;
 
@@ -54,8 +57,8 @@ void analise(int b, int m, int n, char *diretorio){
             totalComparacoes = 0;
 
             for(int i = 0; i < b; i++){
-                 aux = rand()% n;
-                 arvoreVP->busca(vet[aux]->getId(), comparacoes);
+                 //aux = rand()% n;
+                 arvoreVP->busca(vet[indicesBusca[i]]->getId(), comparacoes);
                  totalComparacoes += comparacoes;
             }
 
@@ -99,32 +102,4 @@ void analise(int b, int m, int n, char *diretorio){
 
     }else
         cout << "Erro ao criar o arquivo de saida!" << endl;
-}
-
-void busca(char *diretorio){
-
-    int n = 1000000, comparacoes;
-    char id[90];
-
-    ArvoreVermelhoPreto *arvoreVP = new ArvoreVermelhoPreto();
-    ReviewNode **vet = new ReviewNode*[n];
-
-    importaConjunto(diretorio, n, vet);
-
-     for(int i = 0; i < n; i++){
-        arvoreVP->insere(vet[i], comparacoes);
-    }
-
-    cout << "Digite um ID para busca: ";
-    cin >> id;
-
-    ReviewNode *node = arvoreVP->busca(id, comparacoes);
-
-    if(node != nullptr){
-        acessaRegistro(node->getPosicaoArquivo(), diretorio);
-    }
-    else{
-        cout << "Registro nao encontrado na arvore!" << endl;
-    }
-
 }
